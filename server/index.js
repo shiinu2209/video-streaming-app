@@ -14,7 +14,7 @@ const userRoutes = require("./routes/userRoutes.js");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://vid-streamer.netlify.app",
     credentials: true,
   })
 );
