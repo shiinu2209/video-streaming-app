@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import axiosInstance from "../helpers/axiosInstance";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -22,11 +22,9 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3000/login",
-        formData
-      );
-      Cookies.set("token", response.data.token);
+      const response = await axiosInstance.post("/login", formData);
+      localStorage.setItem("token", response.data.token);
+      console.log(response.data.token);
       navigate("/");
     } catch (error) {
       setError("Invalid email or password");

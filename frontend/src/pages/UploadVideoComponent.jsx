@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "../helpers/axiosInstance";
 
 const UploadVideoComponent = () => {
   const navigate = useNavigate();
@@ -18,18 +18,11 @@ const UploadVideoComponent = () => {
       formData.append("title", title);
       formData.append("description", description);
       formData.append("thumbnail", thumbnail);
-      const responce = await axios.post(
-        "http://localhost:3000/upload",
-        formData,
-        {
-          withCredentials: true,
+      const responce = await axiosInstance.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      });
       setUploading(false);
       navigate("/");
     } catch (error) {

@@ -14,7 +14,7 @@ const userRoutes = require("./routes/userRoutes.js");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://vid-streamer.netlify.app/",
     credentials: true,
   })
 );
@@ -24,6 +24,8 @@ app.use(express.json());
 app.use("/", videoRoutes);
 app.use("/", userRoutes);
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log("Server started on port 3000");
 });

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../helpers/axiosInstance";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -35,15 +35,11 @@ const Signup = () => {
     data.append("profileImage", formData.profileImage);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/register",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axiosInstance.post("/register", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       if (response.status === 201) {
         navigate("/signin");
       }

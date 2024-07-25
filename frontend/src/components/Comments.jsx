@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import axiosInstance from "../helpers/axiosInstance";
 
 const Comments = (props) => {
   const { videoId } = props;
@@ -11,13 +12,10 @@ const Comments = (props) => {
     if (!comment) return;
     setComment("");
     try {
-      await axios.post(
-        `http://localhost:3000/comment/${videoId}`,
-        { text: comment },
-        {
-          withCredentials: true,
-        }
-      );
+      await axiosInstance.post(`/comment/${videoId}`, {
+        text: comment,
+        videoId,
+      });
       fetchComments();
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -26,12 +24,7 @@ const Comments = (props) => {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await axios.delete(
-        `http://localhost:3000/comment/${videoId}/${commentId}`,
-        {
-          withCredentials: true,
-        }
-      );
+      await axiosInstance.delete(`/comment/${videoId}/${commentId}`);
       fetchComments();
     } catch (error) {
       console.error("Error deleting comment:", error);
@@ -40,9 +33,7 @@ const Comments = (props) => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:3000/comments/${videoId}`
-      );
+      const response = await axiosInstance.get(`/comments/${videoId}`);
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RiThumbUpLine, RiThumbUpFill } from "react-icons/ri";
-import axios from "axios";
 import Loader from "../components/Loader";
 import Comments from "../components/Comments";
+import axiosInstance from "../helpers/axiosInstance";
 
 const VideoPlayer = () => {
   const { videoId } = useParams();
@@ -16,13 +16,7 @@ const VideoPlayer = () => {
 
   const handleLike = async () => {
     try {
-      const response = await axios.post(
-        `http://localhost:3000/like/${videoId}`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axiosInstance.post(`/like/${videoId}`);
       setIsLiked(response.data.isLiked);
       setLikes(response.data.likes);
     } catch (error) {
@@ -34,9 +28,7 @@ const VideoPlayer = () => {
     setLoading(true);
     const videoDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/videoDetails/${videoId}`
-        );
+        const response = await axiosInstance.get(`/videoDetails/${videoId}`);
         const date = new Date(response.data.createdAt);
         response.data.createdAt = date.toDateString();
         setVideo(response.data);
@@ -49,12 +41,7 @@ const VideoPlayer = () => {
     videoDetails();
     const liked = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/isLiked/${videoId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.get(`/isLiked/${videoId}`);
         setIsLiked(response.data);
       } catch (error) {
         console.error("Error fetching the video:", error);

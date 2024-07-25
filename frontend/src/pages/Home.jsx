@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Video from "../components/Video";
-import Cookies from "js-cookie";
 import Loader from "../components/Loader";
+import axiosInstance from "../helpers/axiosInstance";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Home = () => {
 
   const handleAllVideos = async () => {
     setLoading(true);
-    const response = await axios.get("http://localhost:3000/videos");
+    const response = await axiosInstance.get("/videos");
     setVideos(response.data);
     setNav("all");
     setLoading(false);
@@ -24,9 +24,7 @@ const Home = () => {
 
   const handleMyVideos = async () => {
     setLoading(true);
-    const response = await axios.get("http://localhost:3000/myVideos", {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get("/myVideos");
     setVideos(response.data);
     setNav("my");
     setLoading(false);
@@ -42,24 +40,20 @@ const Home = () => {
 
   const handleSignOut = async () => {
     try {
-      await axios.post("http://localhost:3000/logout", null, {
-        withCredentials: true,
-      });
-      Cookies.remove("token");
+      await axiosInstance.post("/logout");
+      localStorage.removeItem("token");
       navigate("/signin");
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
   const fetchVideos = async () => {
-    const response = await axios.get("http://localhost:3000/videos");
+    const response = await axiosInstance.get("/videos");
     setVideos(response.data);
   };
   const fetchProfile = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/profile", {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get("/profile");
       setProfile(response.data);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -68,30 +62,22 @@ const Home = () => {
   };
   const fetchProfilePicture = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/myProfilePicture",
-        {
-          withCredentials: true,
-          responseType: "blob",
-        }
-      );
+      const response = await axiosInstance.get("/myProfilePicture", {
+        responseType: "blob",
+      });
       setProfilePicture(URL.createObjectURL(response.data));
     } catch (error) {
       console.error("Error fetching profile picture:", error);
     }
   };
   const fetchMyVideos = async () => {
-    const response = await axios.get("http://localhost:3000/myVideos", {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.get("/myVideos");
     setMyVideos(response.data);
   };
   const handldeDelete = async (videoId) => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:3000/deleteVideo/${videoId}`, {
-        withCredentials: true,
-      });
+      await axiosInstance.delete(`/deleteVideo/${videoId}`);
       fetchMyVideos();
       setLoading(false);
     } catch (error) {
