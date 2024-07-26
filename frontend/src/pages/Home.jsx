@@ -84,9 +84,14 @@ const Home = () => {
       console.error("Error deleting video:", error);
     }
   };
+const fetchtoken = async () => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+  };
 
   useEffect(() => {
-    fetchProfile()
+    fetchtoken()
+      .then(() => fetchProfile())
       .then(fetchProfilePicture)
       .then(() => fetchVideos())
       .then(() => fetchMyVideos())
